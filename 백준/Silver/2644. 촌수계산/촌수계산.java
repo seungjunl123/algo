@@ -66,13 +66,11 @@ public class Main {
 				 }
 				 visited[next]=1;
 				 DFS(next);
-				 // 같은 분기 내에서 찾아질 경우 cnt를 1 내린다
+				 // 같은 분기 내에서 y값으로 가는게 아닌 다른 길이 있을 경우 되돌아가므로 cnt를 1 내린다
 				 cnt--;
 			 }
 			 
 		 }
-		 // for문이 끝나고 cnt 값 초기화
-
 		 return 0;
 	}
 	
