@@ -59,7 +59,7 @@ public class Main {
 		}
 
 		// 수열 재귀를 위한 numbers, vistied 생성
-		// N : list의 size, M : 3개
+		// 수열에서 N : list의 size, M : 3개
 		numbers = new int[3];
 		visited = new int[list.size() + 1];
 		// 수열 재귀인 func1 실행
@@ -78,7 +78,7 @@ public class Main {
 		if (count == 3) {
 			// 임시로 벽을 세울 배열 선언
 			int[][] cor = new int[N][M];
-			// cor을 arr과 연결시키면 arr의 값이 변경되므로 일일히 변경해야되나..
+			// cor을 arr과 연결시키면 arr의 값이 변경되므로 일일히 변경해야되는데 이거는 강사님 물어보기
 			for (int i = 0; i < N; i++) {
 				for (int j = 0; j < M; j++) {
 					cor[i][j] = arr[i][j];
@@ -95,7 +95,7 @@ public class Main {
 		}
 		for (int i = index; i < list.size(); i++) {
 			if (visited[i] != 1) {
-				// 좌표의 중복없이 재귀 실행
+				// 좌표의 중복없이 재귀 실행을 위한 visited
 				visited[i] = 1;
 				numbers[count] = i;
 				func1(count + 1, i);
@@ -111,14 +111,9 @@ public class Main {
 			for (int j = 0; j < M; j++) {
 				// 2를 발견하면 사방탐색으로 1아닌 부분을 2로 변환
 				if (cor[i][j] == 2) {
+					// 이거도 재귀를 해야 가능(이동한 지점에서 사방탐색을 다시 해야 하므로)
 					roop(cor,i,j);
-//					for (int k = 0; k < 4; k++) {
-//						int nr = i + dr[k];
-//						int nc = j + dc[k];
-//						while (nr >= 0 && nr < N && nc >= 0 && nc < M && cor[nr][nc] == 0) {
-//							cor[nr][nc] = 2;
-//						}
-//					}
+
 				}
 			}
 		}
@@ -136,6 +131,8 @@ public class Main {
 		}
 		cnt = 0;
 	}
+	
+	// 사방탐색 메서드
 	static void roop(int[][] cor,int i,int j) {
 		if(i<0||i>=N||j<0||j>=M) {
 			return;
@@ -143,8 +140,10 @@ public class Main {
 		for(int k=0;k<4;k++) {
 			int nr  = i+dr[k];
 			int nc = j+dc[k];
+			// 사방탐색이 가능하고 0인 지점만 2로 변환시켜주면 된다
 			if(nr >= 0 && nr < N && nc >= 0 && nc < M && cor[nr][nc] == 0) {
 				cor[nr][nc] = 2;
+				// 변환이 된 후에는 다시 그 지점에서 사방 탐색
 				roop(cor,nr,nc);
 			}
 		}
