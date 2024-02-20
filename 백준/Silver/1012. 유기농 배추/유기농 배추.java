@@ -1,85 +1,89 @@
+
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
-	// TC, 가로 M, 세로 N, 배추 개수 K 선언
-	static int T;
-	static int M;
-	static int N;
-	static int K;
-
-	// map 배열 선언, visit 체크 여부는 그냥 배열에 +를 해준다
-	static int[][] map;
-	// 지렁이 수 cnt 선언
-	static int cnt;
-	// 델타배열 생성
-	static int[] dr = { 0, 1, 0, -1 };
-	static int[] dc = { 1, 0, -1, 0 };
-
-	static BufferedReader br;
-	static BufferedWriter bw;
-	static StringTokenizer st;
+	public static int M, N, K;
+	public static int a, b;
+	public static boolean[][] visited;
+	public static int[][] adjMatrix;
+	public static int[] dx = new int[] { 0, -1, 0, 1 };
+	public static int[] dy = new int[] { 1, 0, -1, 0 };
 
 	public static void main(String[] args) throws IOException {
-		br = new BufferedReader(new InputStreamReader(System.in));
-		bw = new BufferedWriter(new OutputStreamWriter(System.out));
-		// T 입력
-		T = Integer.parseInt(br.readLine());
-		// T 만큼 케이스 반복문 생성
-		for (int TC = 1; TC <= T; TC++) {
-			// M,N,K 초기화 및 값 입력
-			st = new StringTokenizer(br.readLine());
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int T = Integer.parseInt(br.readLine());
+		for (int t = 1; t <= T; t++) {
+			StringTokenizer st = new StringTokenizer(br.readLine());
 			M = Integer.parseInt(st.nextToken());
 			N = Integer.parseInt(st.nextToken());
 			K = Integer.parseInt(st.nextToken());
-			// K개의 배추 위치를 map에 1로 입력해준다
-			map = new int[M][N];
+
+			visited = new boolean[M + 1][N + 1];
+			adjMatrix = new int[M + 1][N + 1];
+
 			for (int i = 0; i < K; i++) {
 				st = new StringTokenizer(br.readLine());
-				map[Integer.parseInt(st.nextToken())][Integer.parseInt(st.nextToken())] = 1;
+				a = Integer.parseInt(st.nextToken());
+				b = Integer.parseInt(st.nextToken());
+
+				adjMatrix[a][b] = 1;
 			}
-			// map 탐색
+			int cnt = 0;
 			for (int i = 0; i < M; i++) {
 				for (int j = 0; j < N; j++) {
-					// 1인 위치(배추) 도착 시 BFS 실행
-					if (map[i][j] == 1) {
-						func1(i, j);
-						// 끝나면 cnt를 1 추가해준다
+					if (adjMatrix[i][j] == 1 && !visited[i][j]) {
 						cnt++;
+						BFS(i, j);
 					}
 				}
 			}
-			// cnt출력
-			bw.write(cnt + "\n");
-			bw.flush();
-			// cnt 0으로 초기화
-			cnt = 0;
+			System.out.println(cnt);
 		}
-		bw.close();
-	}
+	} // end main method()
 
-	// BFS 실행
-	public static void func1(int i, int j) {
-		// 해당 위치 +1
-		map[i][j]++;
-		int nr;
-		int nc;
-		// 사방 탐색으로 1인 지역 찾으면
-		for (int q = 0; q < 4; q++) {
-			nr = i + dr[q];
-			nc = j + dc[q];
-			if (nr >= 0 && nr < M && nc >= 0 && nc < N && map[nr][nc] == 1) {
-				// 재귀함수 실행으로 추가 탐색
-				func1(nr,nc);
+	public static void BFS(int x, int y) {
+		Queue<Integer[]> queue = new LinkedList<>();
+
+		visited[x][y] = true;
+		queue.offer(new Integer[] { x, y });
+
+		int[] dx = { 1, -1, 0, 0 };
+		int[] dy = { 0, 0, -1, 1 };
+		
+		while (!queue.isEmpty()) {
+			Integer[] node = queue.poll();
+			int wx = node[0];
+			int wy = node[1];
+			for (int d = 0; d < 4; d++) {
+				int nx = wx + dx[d];
+				int ny = wy + dy[d];
+				if (nx < 0 || ny < 0 || nx >= M || ny >= N) {
+					continue;
+				}
+				if (visited[nx][ny] == true || adjMatrix[nx][ny] != 1) {
+					continue;
+				}
+				visited[nx][ny] = true;
+//				System.out.println(nx + " " + ny);
+
+				queue.offer(new Integer[] { nx, ny });
 			}
-		}
-	}
+		} // end while()
+
+//		for (int i = 0; i < M; i++) {
+//			for (int j = 0; j < N; j++) {
+//				System.out.print(visited[i][j] + " ");
+//			}
+//			System.out.println();
+//		}
+//		System.out.println();
+
+	} // end BFS()
 
 }
