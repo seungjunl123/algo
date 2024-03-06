@@ -29,6 +29,8 @@ class Main {
 		L = Integer.parseInt(st.nextToken());
 		// L만큼 반복 진행
 		for(int i=0;i<L;i++) {
+			// 학번이 0으로 시작하는 학생이 있기 때문에 우선 String으로 받고 배열에 넣을 때 parseInt를 수행
+			// 배열 없이 중복을 검증할 수 있다면 훨씬 빠를 것 같다
 			String a = br.readLine();
 			sugang.offer(a);
 			// 학번을 받을 때마다 queue에 넣고, 학번에 해당하는 인덱스에 1을 더해준다
