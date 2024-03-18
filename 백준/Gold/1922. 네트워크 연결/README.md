@@ -32,7 +32,7 @@
 
  <p>모든 컴퓨터를 연결하는데 필요한 최소비용을 첫째 줄에 출력한다.</p>
 
-<img src="./img/IMG_0004.jpeg">
-<img src="./img/IMG_0005.jpeg">
-<img src="./img/IMG_0006.jpeg">
+<img src="../img/IMG_0004.jpeg">
+<img src="../img/IMG_0005.jpeg">
+<img src="../img/IMG_0006.jpeg">
 
