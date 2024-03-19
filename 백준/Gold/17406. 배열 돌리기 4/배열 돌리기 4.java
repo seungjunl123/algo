@@ -53,10 +53,10 @@ public class Main {
 		bw.flush();
 		bw.close();
 	}
-
+	
 	private static void order(int idx) {
 		if (idx == K) {
-//			System.out.println(Arrays.toString(numbers));
+			// 수열의 순서가 정해졌으니 돌리러 간다
 			rotate(0, arr);
 			return;
 		}
@@ -90,38 +90,43 @@ public class Main {
 
 		int[][] res = new int[N][M];
 
-		// 돌릴 배열 재생성
+		// 돌릴 배열 재생성, 배열을 가져오는 경우 static 변수인 arr값을 참조하게 되므로
+		//  arr의 기본값이 수정된다. 따라서 새로운 배열을 만들어 arr의 값을 복사하는 식으로 진행
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < M; j++) {
 				res[i][j] = res2[i][j];
 			}
 		}
-
+		// s에 따라 사분면 만큼의 작업을 수행
 		int r = info[numbers[k]][0] - 1;
 		int c = info[numbers[k]][1] - 1;
 		int s = info[numbers[k]][2];
-		// s에 따라 사분면 만큼의 작업을 수행
-
+		
+		// 회전이 시작하는 1사분면은 한칸씩 오른쪽으로 밀린다
 		for (int i = r - s; i < r; i++) {
 			for (int j = c - s + 1 + (i-(r-s)); j <= c + s - (i-(r-s)); j++) {
 				res[i][j] = res2[i][j - 1];
 			}
 		}
+		// 반대인 3사분면에서는 한칸씩 왼쪽으로 밀린다
 		for (int i = r + s; i > r; i--) {
 			for (int j = c - s + ((r+s)-i); j <= c + s - 1 - ((r+s)-i); j++) {
 				res[i][j] = res2[i][j + 1];
 			}
 		}
+		// 4사분면에서는 위족으로 밀리므로 아래의 값을 가져온다
 		for (int j = c - s; j < c; j++) {
 			for (int i = r - s + (j-(c-s)); i <= r + s - 1 - (j-(c-s)); i++) {
 				res[i][j] = res2[i + 1][j];
 			}
 		}
+		// 3사분면에서는 아래쪽으로 밀리므로 위쪽의 값을 가져온다
 		for (int j = c + s; j > c; j--) {
 			for (int i = r - s + ((c+s)-j) + 1; i <= r + s - ((c+s)-j); i++) {
 				res[i][j] = res2[i - 1][j];
 			}
 		}
+		// 회전이 완료되면 수열에 따라 다음 회전을 진행
 		rotate(k + 1, res);
 
 	}
