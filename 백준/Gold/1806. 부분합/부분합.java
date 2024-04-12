@@ -1,59 +1,53 @@
-
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.StringTokenizer;
 
-// 투포인터
-public class Main {
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
+class Main {
+	static int N,S;
+	static int[] arr;
+	static int ans;
 
-		int N = Integer.parseInt(st.nextToken());
-		int S = Integer.parseInt(st.nextToken());
+	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+	static StringTokenizer st;
 
-		int minSize = 100000;
-
-		// 배열 입력
-		int[] arr = new int[N];
+	public static void main(String[] args) throws NumberFormatException, IOException {
 		st = new StringTokenizer(br.readLine());
-		for (int i = 0; i < N; i++) {
+		N = Integer.parseInt(st.nextToken());
+		S = Integer.parseInt(st.nextToken());
+		
+		arr = new int[N];
+		ans = Integer.MAX_VALUE;
+		st = new StringTokenizer(br.readLine());
+		for(int i=0;i<N;i++) {
 			arr[i] = Integer.parseInt(st.nextToken());
 		}
-
-		int start = 0;
-		int end = 0;
-		int sum = arr[0];
-
-		while (true) {
-			if (end == N || start > end) {
-				break;
-			}
-			if (sum >= S) {
-				minSize = Math.min(minSize, end - start + 1);
-				if (minSize == 1) {
+		
+		for(int i=0;i<N;i++) {
+			int sum = 0;
+			int count = 0;
+			for(int j = i;j<N;j++) {
+				sum += arr[j];
+				count++;
+				if(count>ans) break;
+				if(sum>=S) {
+					ans = count;
 					break;
 				}
-				sum -= arr[start++];
-			} else if (sum < S) {
-				++end;
-				if (end == N) {
-					break;
-				}
-				sum += arr[end];
-
 			}
-		} // end while()
-
-		if (minSize == 100000) {
-			System.out.println(0);
-		} else {
-			System.out.println(minSize);
-
+			
 		}
-
-	} // end main method
-
+        
+        if(ans==Integer.MAX_VALUE) ans = 0;
+		bw.write(ans+"");
+		bw.flush();
+		bw.close();
+	}
 }
