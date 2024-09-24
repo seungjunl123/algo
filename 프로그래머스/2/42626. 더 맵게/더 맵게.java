@@ -18,7 +18,7 @@ class Solution {
             size--;
         }
         
-        if(pq.size()==1 && pq.peek()<K){
+        if( pq.peek()<K){
             answer = -1;
         }
         
