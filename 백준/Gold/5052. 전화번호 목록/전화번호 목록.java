@@ -30,22 +30,24 @@ public class Main {
             }
             parent.end = true;
         }
-        private boolean search(String str) {
-            Node parent = root;
-            StringBuilder sb = new StringBuilder();
-
-            for (int i = 0; i < str.length(); i++) {
-                if (parent == null) return true;
-
-                parent = parent.child.getOrDefault(str.charAt(i), null);
-                sb.append(str.charAt(i));
-                if (parent != null && parent.end) {
-                    if (str.equals(sb.toString())) return true; // 검색된 문자와 같은 단어일 때
-                    else return false;
-                }
-            }
-            return true;
-        }
+		
+		private boolean search(String str) {
+			Node node = root;
+			StringBuilder sb = new StringBuilder();
+			
+			for(int i=0;i<str.length();i++) {
+				char c = str.charAt(i);
+				
+				node = node.child.get(c);
+				sb.append(c);
+				
+				if(node.end) {
+					if(str.equals(sb.toString())) return true;
+					else return false;
+				}
+			}
+			return true;
+		}
 	}
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
