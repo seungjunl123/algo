@@ -1,66 +1,50 @@
-import java.io.*;
 import java.util.*;
-
+import java.io.*;
 
 public class Main {
-	static int N,M;
-	static int[] tree;
-	
-	public static void main(String[] args) throws IOException {
-		// linkedList의 n+1 배열?
-		// 근데 합치기는 쉬운데 탐색이 많아지면..?
-		// 트리
-		// 0 1 3 이면 1이 3의 부모가 되고, 1 1 7이면 1의 부모와 7의 부모를 보기
-		// 0 1 3 , 0 7 3이면..? 작은 수가 부모가 되는 걸로 해보자
-		// => 유니온파인드....왜 생각을 못햇을까
+	static int parents[], N, M;
+
+	private static void make() {
+		for (int i = 0; i <= N; i++) {
+			parents[i] = i;
+		}
+	}
+
+	private static int find(int a) {
+		if(a!=parents[a]) {
+			parents[a] = find(parents[a]);
+		}
+		return parents[a];
+	}
+
+	private static void union(int left, int right) {
+		parents[find(right)] = find(left);
+	}
+
+	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		
+		StringBuilder sb = new StringBuilder();
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
-		tree = new int[N+1];
-		for(int i=0;i<=N;i++) {
-			tree[i] = i;
-		}
-		
-		for(int i=0;i<M;i++) {
+		parents = new int[N + 1];
+		make();
+		for (int i = 0; i < M; i++) {
 			st = new StringTokenizer(br.readLine());
-			int command = Integer.parseInt(st.nextToken());
-			int num1 = Integer.parseInt(st.nextToken());
-			int num2 = Integer.parseInt(st.nextToken());
-			
-			if(command == 0) {
-				union(num1, num2);
-			} else {
-				if(findParent(num1) == findParent(num2)) {
-					bw.write("YES\n");
+			int check = Integer.parseInt(st.nextToken());
+			int left = Integer.parseInt(st.nextToken());
+			int right = Integer.parseInt(st.nextToken());
+
+			if (check == 1) {
+				if (find(left) == find(right)) {
+					sb.append("YES\n");
 				} else {
-					bw.write("NO\n");
+					sb.append("NO\n");
 				}
+			} else {
+				union(left, right);
 			}
 		}
-		
-		bw.flush();
-		bw.close();
-		
-
-	}
-
-	public static void union(int a, int b) {
-		a = findParent(a);
-		b = findParent(b);
-		if(a!=b)
-			tree[b]=a;
-		//		if(find(a)!=find(b))
-        //		parent[b]=a;
-	}
-
-	private static int findParent(int num) {
-		if(tree[num]==num) {
-			return num;
-		} else {
-			return findParent(tree[num]);
-		}
+		System.out.println(sb);
 	}
 }
