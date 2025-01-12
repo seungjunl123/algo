@@ -18,10 +18,10 @@ int main(void)
 	cin >> T;
 	for (int t = 0;t < T;t++)
 	{
-		priority_queue<long, vector<long>, greater<long>> pq1;
-		priority_queue<long> pq2;
+		priority_queue<int, vector<int>, greater<int>> pq1;
+		priority_queue<int> pq2;
 		dCount = 0;iCount = 0;minVal = 0;maxVal = 0;
-		map<long, long> isLeft;
+		map<int, int> isLeft;
 
 		cin >> K;
 		for (int k = 0;k < K;k++)
