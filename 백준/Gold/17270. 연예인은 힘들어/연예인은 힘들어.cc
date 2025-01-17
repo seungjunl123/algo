@@ -84,7 +84,6 @@ int main() {
     {
         if (i == S || i == J) continue;
         if (minDist < dist[0][i] + dist[1][i]) continue;
-        minDist = dist[0][i] + dist[1][i];
         if (dist[0][i] < dist[1][i]) continue;
         if (dist[1][i] <= dist[1][answer])
             answer = i;
