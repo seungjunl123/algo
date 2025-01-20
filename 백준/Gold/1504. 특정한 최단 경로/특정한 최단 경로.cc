@@ -17,7 +17,7 @@ struct Node
 };
 
 int N, M;
-long long dist[3][801];
+int dist[3][801];
 vector<Node> roads[801];
 int num1, num2;
 
@@ -70,7 +70,6 @@ int main() {
 
     long long dist1 = dist[0][num1] + dist[1][num2] + dist[2][N];
     long long dist2 = dist[0][num2] + dist[2][num1] + dist[1][N];
-
     int answer = dist1 > dist2 ? dist2 : dist1;
 
     if (answer >= INF )
