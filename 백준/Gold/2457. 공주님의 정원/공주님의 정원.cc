@@ -62,36 +62,36 @@ priority_queue<Node, vector<Node>, CompareCount> Select;
 
 bool countFlower()
 {
-	int lastEdM = 3, lastEdD = 1;
-
 	while (!Total.empty())
 	{
-		// 현재 시점에서 피어날 수 있는 꽃들을 Select에 추가
-		while (!Total.empty() &&
-			(Total.top().stMonth < sM ||
-				(Total.top().stMonth == sM && Total.top().stDay <= sD)))
+			//cout << " ==== " << endl;
+			//cout << sM << ' ' << sD << endl;
+		// 적은 날짜 넣기
+		while (!Total.empty() && Total.top().stMonth <= sM)
 		{
+			if (Total.top().stMonth == sM && Total.top().stDay > sD) break;
+
+			//cout << Total.top().stMonth << ' ' << Total.top().stDay << endl;
 			Select.push(Total.top());
 			Total.pop();
 		}
 
-		if (Select.empty())
-			return false;  // 더 이상 선택할 수 있는 꽃이 없는 경우
+		if (Select.empty())  break;
 
-		Node bestFlower = Select.top();
-		Select.pop();
-
+		Node Top = Select.top();
+        Select.pop();
+        
 		Count++;
-		sM = bestFlower.edMonth;
-		sD = bestFlower.edDay;
+		sM = Top.edMonth;
+		sD = Top.edDay;
 
 		if (sM > eM || (sM == eM && sD > eD))
 			return true;  // 목표 날짜를 초과하면 종료
-	}
 
+
+	}
 	return false;
 }
-
 
 int main() {
 
