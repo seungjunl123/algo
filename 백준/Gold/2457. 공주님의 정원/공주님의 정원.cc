@@ -79,16 +79,18 @@ bool countFlower()
 		if (Select.empty())  break;
 
 		Node Top = Select.top();
-        Select.pop();
-        
 		Count++;
 		sM = Top.edMonth;
 		sD = Top.edDay;
 
+       
 		if (sM > eM || (sM == eM && sD > eD))
 			return true;  // 목표 날짜를 초과하면 종료
-
-
+        
+		while (!Select.empty())
+		{
+			Select.pop();
+		}
 	}
 	return false;
 }
