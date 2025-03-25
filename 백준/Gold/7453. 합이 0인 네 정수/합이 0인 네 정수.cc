@@ -7,8 +7,8 @@ using namespace std;
 int N;
 vector<vector<long long>> list;
 
-vector<long long> merged1;
-vector<long long> merged2;
+vector<long long> merged1(N*N);
+vector<long long> merged2(N* N);
 
 long long answer = 0;
 
@@ -41,12 +41,12 @@ int main() {
 
 	for (int i = 0;i < merged1.size();i++)
 	{
+		auto low = lower_bound(merged2.begin(), merged2.end(), -merged1[i]);
+		auto upp = upper_bound(merged2.begin(), merged2.end(), -merged1[i]);
 
-
-		if (lower_bound(merged2.begin(), merged2.end(), -merged1[i])
-			!= upper_bound(merged2.begin(), merged2.end(), -merged1[i]))
+		if (low != upp)
 		{
-			answer += upper_bound(merged2.begin(), merged2.end(), -merged1[i]) - lower_bound(merged2.begin(), merged2.end(), -merged1[i]);
+			answer += upp - low;
 		}
 	}
 
