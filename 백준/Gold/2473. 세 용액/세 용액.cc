@@ -4,43 +4,30 @@
 #include <cmath>
 using namespace std;
 
-int N;
-vector<long long> list;
-vector<long long> answer(3);
-long long minSum = 3e9 + 1;
-
 int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-
+    int N;
     cin >> N;
-    list.resize(N);
-    for (int i = 0; i < N; i++) {
+
+    vector<long long> list(N), answer(3);
+    for (int i = 0; i < N; ++i) {
         cin >> list[i];
     }
 
     sort(list.begin(), list.end());
+    long long minSum = 3e9 + 1;
 
-    for (int i = 0; i < N - 2; i++) {
-        for (int j = i + 1; j < N - 1; j++) {
-            long long twoSum = list[i] + list[j];
-            long long target = -twoSum;
+    for (int i = 0; i < N - 2; ++i) {
+        int left = i + 1, right = N - 1;
 
-            // 이분 탐색 범위는 j+1 부터 N-1까지 (중복 방지)
-            int left = j + 1, right = N - 1;
-            while (left <= right) {
-                int mid = (left + right) / 2;
-                long long total = list[i] + list[j] + list[mid];
-                if (abs(total) < minSum) {
-                    minSum = abs(total);
-                    answer = {list[i], list[j], list[mid]};
-                }
-
-                if (total < 0)
-                    left = mid + 1;
-                else
-                    right = mid - 1;
+        while (left < right) {
+            long long sum = list[i] + list[left] + list[right];
+            if (abs(sum) < minSum) {
+                minSum = abs(sum);
+                answer = {list[i], list[left], list[right]};
             }
+
+            if (sum < 0) left++;
+            else right--;
         }
     }
 
