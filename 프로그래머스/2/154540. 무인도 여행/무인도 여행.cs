@@ -3,73 +3,59 @@ using System.Collections.Generic;
 
 public class Solution {
     static int[,] map;
-    static bool[,] check;
-    static int[] dr = {0, 1, 0, -1};
-    static int[] dc = {1, 0, -1, 0};
+    static bool[,] visited;
+    static readonly int[] dr = { 0, 1, 0, -1 };
+    static readonly int[] dc = { 1, 0, -1, 0 };
+
     public int[] solution(string[] maps) {
-        int[] answer = new int[] {};
-        List<int> answerList = new List<int>();
-        int R = maps.Length;
-        int C = maps[0].Length;
-        map = new int[R, C];
-        check = new bool[R,C];
-        
-        for(int i=0;i<R;i++)
-        {
-            char[] arr = maps[i].ToCharArray();
-            for(int j=0;j<C;j++)
-            {
-                check[i,j] = false;
-                if(arr[j] == 'X')
-                    map[i,j] = 0;
-                else
-                    map[i,j] = int.Parse(arr[j].ToString());
+        int rows = maps.Length;
+        int cols = maps[0].Length;
+
+        map = new int[rows, cols];
+        visited = new bool[rows, cols];
+
+        // 지도 초기화
+        for (int i = 0; i < rows; i++) {
+            char[] line = maps[i].ToCharArray();
+            for (int j = 0; j < cols; j++) {
+                map[i, j] = (line[j] == 'X') ? 0 : int.Parse(line[j].ToString());
             }
         }
-        
-        for(int i=0;i<R;i++)
-        {
-            for(int j=0;j<C;j++)
-            {
-                if(check[i,j]) continue;
-                
-                check[i,j] = true;
-                if(map[i,j] == 0) continue;
-                answerList.Add(Explore(i,j,R,C));
+
+        List<int> resultList = new List<int>();
+
+        // 모든 셀 탐색
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (!visited[i, j] && map[i, j] > 0) {
+                    resultList.Add(DFS(i, j, rows, cols));
+                }
             }
         }
-        if(answerList.Count==0)
-        {
-            int[] tmp = {-1};
-            answer = tmp;
-        }
-        else
-        {
-            answerList.Sort();
-            int[] tmp = new int[answerList.Count];
-            for(int i=0;i<answerList.Count;i++)
-            {
-               tmp[i] = answerList[i];
-            }   
-            answer = tmp;
-        }
-        
-        return answer;
+
+        if (resultList.Count == 0) return new int[] { -1 };
+
+        resultList.Sort();
+        return resultList.ToArray();
     }
-    
-    static private int Explore(int r, int c,int maxR, int maxC)
-    {
-        int ret = map[r,c];
-        for(int i=0;i<4;i++)
-        {
+
+    static int DFS(int r, int c, int maxR, int maxC) {
+        visited[r, c] = true;
+        int sum = map[r, c];
+
+        for (int i = 0; i < 4; i++) {
             int nr = r + dr[i];
             int nc = c + dc[i];
-            if(nr<0 || nr >=maxR || nc<0 || nc>=maxC) continue;
-            if(map[nr,nc] == 0 || check[nr,nc]) continue;
-            check[nr,nc] = true;
-            ret += Explore(nr,nc,maxR,maxC);
+
+            if (IsInBounds(nr, nc, maxR, maxC) && !visited[nr, nc] && map[nr, nc] > 0) {
+                sum += DFS(nr, nc, maxR, maxC);
+            }
         }
-        
-        return ret;
+
+        return sum;
+    }
+
+    static bool IsInBounds(int r, int c, int maxR, int maxC) {
+        return r >= 0 && r < maxR && c >= 0 && c < maxC;
     }
 }
