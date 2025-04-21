@@ -4,8 +4,7 @@
 
 using namespace std;
 
-// 최대공약수 함수 (유클리드 호제법)
-long long gcd(long long a, long long b) {
+long long getGCD(long long a, long long b) {
     while (b != 0) {
         long long temp = a % b;
         a = b;
@@ -14,17 +13,19 @@ long long gcd(long long a, long long b) {
     return a;
 }
 
-// 최소공배수 함수
-long long lcm(long long a, long long b) {
-    return a * b / gcd(a, b);
-}
-
 int solution(vector<int> arr) {
-    long long answer = arr[0];
-    
-    for (int i = 1; i < arr.size(); i++) {
-        answer = lcm(answer, arr[i]);
+    queue<long long> q;
+    for(int i = 0; i < arr.size(); i++) {
+        q.push(arr[i]); 
     }
-    
-    return answer;
+
+    while(q.size() > 1) {
+        long long first = q.front(); q.pop();
+        long long second = q.front(); q.pop();
+
+        long long GCD = getGCD(first, second);
+        q.push(first * second / GCD);  // LCM
+    }
+
+    return q.front();
 }
