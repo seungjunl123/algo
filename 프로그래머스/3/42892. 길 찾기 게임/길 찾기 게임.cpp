@@ -5,26 +5,28 @@
 
 using namespace std;
 
-struct Node{
-    int x;
-    int y;
-    int number;
-    Node * left;
-    Node * right;
+struct Node
+{
+    int X;
+    int Y;
+    int Value;
+    Node* left;
+    Node* right;
 };
 
-bool desc(Node a, Node b)
+bool cmp(Node A, Node B)
 {
-    if(a.y == b.y)
+    if(A.Y == B.Y)
     {
-        return a.x < b.x;
+        return A.X < B.X;
     }
-    return a.y > b.y;
+    return A.Y > B.Y;
+    
 }
 
 void addNode(Node * parent, Node * child)
 {
-    if(child->x < parent->x)
+    if(child->X < parent->X)
     {
         if(parent->left == NULL)
             parent->left = child;
@@ -44,7 +46,7 @@ void preorder(vector<int> &answer, Node * node)
 {
     if(node == NULL)
         return;
-    answer.push_back(node->number);
+    answer.push_back(node->Value);
     preorder(answer, node->left);
     preorder(answer, node->right);
 }
@@ -55,32 +57,32 @@ void postorder(vector<int> &answer, Node * node)
         return;
     postorder(answer, node->left);
     postorder(answer, node->right);
-    answer.push_back(node->number);
+    answer.push_back(node->Value);
 }
 
 vector<vector<int>> solution(vector<vector<int>> nodeinfo) {
-    vector<vector<int>> answer = {{}, {}};
-    vector<Node> node;
+    vector<vector<int>> answer= {{}, {}};
+    vector<Node> nodes;
     Node * root;
-    
-    for(int i = 0; i < nodeinfo.size(); i++)
+    for(int i=0;i<nodeinfo.size();i++)
     {
         Node tmp;
-        tmp.x = nodeinfo[i][0];
-        tmp.y = nodeinfo[i][1];
-        tmp.number = i + 1;
-        node.push_back(tmp);
+        tmp.X = nodeinfo[i][0];
+        tmp.Y = nodeinfo[i][1];
+        tmp.Value = i + 1;
+        nodes.push_back(tmp);
     }
     
-    sort(node.begin(), node.end(), desc);
+    sort(nodes.begin(), nodes.end(), cmp);
     
-    root = &node[0];
-    
-    for(int i = 1; i < node.size(); i++)
-        addNode(root, &node[i]);
-    
-    preorder(answer[0], root);
+    root = &nodes[0];
+    for(int i=1;i<nodes.size();i++)
+    {
+        addNode(root, &nodes[i]);
+    }
+        preorder(answer[0], root);
     postorder(answer[1], root);
+    
     
     return answer;
 }
