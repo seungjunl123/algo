@@ -1,49 +1,68 @@
 #include <iostream>
-#include <string>
 #include <vector>
-#include <queue>
-
+#include <string>
+#include <algorithm>
 using namespace std;
 
-int N;
-string str[20001];
-int maxC = 0;
-int idxS = 0, idxT = 1;
+struct Trie {
+    Trie* child[26];
+    vector<int> wordIndices;
 
-
-int main(void) 
-{
-    cin >> N;
-    for (int i = 0;i < N;i++)
-    {
-        string s;
-        cin >> s;
-        str[i] = s;
+    Trie() {
+        fill(child, child + 26, nullptr);
     }
 
-    for (int i = 0;i < N - 1;i++)
-    {
-        for (int j = i + 1;j < N;j++)
-        {
-            int length = min(str[i].size(), str[j].size());
-            int count = 0;
-            for (int k = 0;k < length;k++)
-            {
-                if (str[i][k] != str[j][k]) break;
-                count++;
-            }
-
-            if (count > maxC)
-            {
-                maxC = count;
-                idxS = i;
-                idxT = j;
-            }
+    void insert(const string& word, int index) {
+        Trie* node = this;
+        for (char c : word) {
+            int idx = c - 'a';
+            if (node->child[idx] == nullptr)
+                node->child[idx] = new Trie();
+            node = node->child[idx];
+            node->wordIndices.push_back(index);  // 이 노드를 거치는 단어
         }
     }
 
-    cout << str[idxS] << endl;
-    cout << str[idxT] << endl;
+    void findMaxLCP(const vector<string>& words, int depth,
+                    int& maxLen, pair<int, int>& answer) {
+        for (int i = 0; i < 26; ++i) {
+            if (child[i]) {
+                child[i]->findMaxLCP(words, depth + 1, maxLen, answer);
+            }
+        }
 
+        if (wordIndices.size() >= 2) {
+            // 가장 앞서 나온 두 단어 선택
+            int a = wordIndices[0], b = wordIndices[1];
+            if (a > b) swap(a, b);
+            if (depth > maxLen || (depth == maxLen && make_pair(a, b) < answer)) {
+                maxLen = depth;
+                answer = {a, b};
+            }
+        }
+    }
+};
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    int N;
+    cin >> N;
+
+    vector<string> words(N);
+    Trie root;
+
+    for (int i = 0; i < N; ++i) {
+        cin >> words[i];
+        root.insert(words[i], i);
+    }
+
+    int maxLCP = 0;
+    pair<int, int> result = {N, N};
+
+    root.findMaxLCP(words, 0, maxLCP, result);
+
+    cout << words[result.first] << '\n' << words[result.second] << '\n';
     return 0;
 }
