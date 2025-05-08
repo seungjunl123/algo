@@ -17,5 +17,5 @@ int solution(int n, vector<int> money) {
 		}
 	}
     
-    return dp[n];
+    return dp[n]%1000000007;
 }
