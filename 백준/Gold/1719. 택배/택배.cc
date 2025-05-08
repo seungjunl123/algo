@@ -1,93 +1,57 @@
-#include <algorithm>
 #include <iostream>
-#include <string>
 #include <vector>
-#include <queue>
-
-#define INF 987654321
+#include <algorithm>
+#define INF 1e9
 using namespace std;
 
-int N,M;
-int map[201][201];
-int dist[201][2]; //  distance, parent
-vector<pair<int, int>>  roads[201];
+int N, M;
+int dist[201][201];
+int path[201][201];
 
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
 
-void dijckstra(int start)
-{
-	priority_queue<pair<int, int>> pq;
-	for (int i = 1;i <= N;i++)
-	{
-		dist[i][0] = INF;
-		dist[i][1] = -1;
-	}
-	dist[start][0] = 0;
-	dist[start][1] = start;
-	pq.push(make_pair(0, start));
+    cin >> N >> M;
 
-	while (!pq.empty())
-	{
-		int node = pq.top().second;
-		int nodeCost = -pq.top().first;
-		pq.pop();
+    // 초기화
+    for (int i = 1; i <= N; ++i) {
+        for (int j = 1; j <= N; ++j) {
+            if (i == j) dist[i][j] = 0;
+            else dist[i][j] = INF;
+            path[i][j] = j;  // 기본적으로 j로 간다고 생각
+        }
+    }
 
-		for (int i = 0;i < roads[node].size();i++)
-		{
-			int next = roads[node][i].first;
-			int nextCost = roads[node][i].second;
-			if (dist[next][0] > dist[node][0] + nextCost)
-			{
-				dist[next][0] = dist[node][0] + nextCost;
-				if (dist[node][1] == start)
-				{
-					dist[next][1] = next;
-				}
-				else
-				{
-					dist[next][1] = dist[node][1];  // 부모 노드가 아니라 처음 거쳐야 할 노드를 전파
-				}
+    // 간선 입력
+    for (int i = 0; i < M; ++i) {
+        int a, b, c;
+        cin >> a >> b >> c;
+        dist[a][b] = dist[b][a] = c;
+        path[a][b] = b;
+        path[b][a] = a;
+    }
 
-				pq.push(make_pair(-dist[next][0], next));
-			}
-			
-		}
-	}
-}
+    // 플로이드 워셜 수행
+    for (int k = 1; k <= N; ++k) {
+        for (int i = 1; i <= N; ++i) {
+            for (int j = 1; j <= N; ++j) {
+                if (dist[i][k] + dist[k][j] < dist[i][j]) {
+                    dist[i][j] = dist[i][k] + dist[k][j];
+                    path[i][j] = path[i][k];  // i에서 j로 가는 첫 도시 = i에서 k로 가는 첫 도시
+                }
+            }
+        }
+    }
 
-int main()
-{
-	std::ios_base::sync_with_stdio(false);
-	std::cin.tie(NULL);
+    // 결과 출력
+    for (int i = 1; i <= N; ++i) {
+        for (int j = 1; j <= N; ++j) {
+            if (i == j) cout << "- ";
+            else cout << path[i][j] << " ";
+        }
+        cout << "\n";
+    }
 
-	cin >> N >> M;
-	
-	for (int i = 0;i < M;i++)
-	{
-		int start;
-		int end;
-		int cost;
-		cin >> start >> end >> cost;
-
-		roads[start].push_back(make_pair(end, cost));
-		roads[end].push_back(make_pair(start, cost));
-	}
-
-	for (int i = 1;i <= N;i++)
-	{
-		dijckstra(i);
-		for (int j = 1;j <= N;j++)
-		{
-			if (i != j)
-			{
-				cout << dist[j][1] << ' ';
-			}
-			else
-			{
-				cout << '-' << ' ';
-			}
-		}
-		cout << '\n';
-	}
-	cout << endl;
-
+    return 0;
 }
