@@ -1,6 +1,6 @@
 #include <string>
 #include <vector>
-
+#define ll long long
 using namespace std;
 
 long long min(long long a, long long b)
@@ -13,33 +13,36 @@ long long max(long long a, long long b)
     return a > b ? a : b;
 }
 
-long long solution(int a, int b, vector<int> g, vector<int> s, vector<int> w, vector<int> t)
+ll solution(int a, int b, vector<int> g, vector<int> s, vector<int> w, vector<int> t)
 {
-    long long l = 0, r = 1e15, m;
+    ll left = 0, right = 1000000000000000LL;
     int n = g.size();
 
-    while (l < r)
+    while (left < right)
     {
-        m = (l + r) / 2;
-        long long moved_g = 0, moved_s = 0, C = 0;
+        ll mid = (left + right) / 2;
+        ll movedGold = 0, movedSilver = 0, sum = 0;
         for (int i = 0; i < n; i++)
         {
-            long long P = (m / t[i] + 1) / 2 * w[i];
-            long long P_g = min(P, g[i]);
-            moved_g += P_g, P -= P_g;
-            long long P_s = min(P, s[i]);
-            moved_s += P_s;
-            long long now_s=s[i] - P_s;
-            C += min(now_s, P_g);
+            ll movedResource = (mid / t[i] + 1) / 2 * w[i];
+            ll movingGold = min(movedResource, g[i]);
+            
+            movedGold += movingGold;
+            movedResource -= movingGold;
+            
+            ll movingSilver = min(movedResource, s[i]);
+            movedSilver += movingSilver;
+            ll curSilver=s[i] - movingSilver;
+            sum += min(curSilver, movingGold);
         }
-        long long need_s = max(b - moved_s, 0);
-        long long add_s = min(C, need_s);
-        moved_s += add_s;
-        moved_g -= add_s;
-        if (moved_g >= a && moved_s >= b)
-            r = m;
+        ll leftSilver = max(b - movedSilver, 0);
+        ll addSilver = min(sum, leftSilver);
+        movedSilver += addSilver;
+        movedGold -= addSilver;
+        if (movedGold >= a && movedSilver >= b)
+            right = mid;
         else
-            l = m + 1;
+            left = mid + 1;
     }
-    return l;
+    return left;
 }
