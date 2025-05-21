@@ -23,21 +23,16 @@ int main() {
 
     for (int i = 0;i < N;i++)
     {
-        while (true)
+        while (!s.empty())
         {
-            if (s.empty())
-            {
-                s.push(list[i]);
-                break;
-            }
             if (list[i] < s.top())
             {
                 count += s.size();
-                s.push(list[i]);
                 break;
             }
             s.pop();
         }
+        s.push(list[i]);
     }
 
     cout << count;
